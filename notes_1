@@ -1,0 +1,125 @@
+on:
+  workflow_dispatch:
+
+  pull_request:
+    branches:
+      - main
+
+--> This means:
+
+GitHub supports multiple events/ triggers under on:.
+The workflow will run
+✔ When a Pull Request is created/updated
+✔ When someone manually clicks “Run workflow”
+==================================================================
+
+Q. Can we define both pull_request and workflow_dispatch in same workflow?
+-->
+Yes. GitHub Actions supports multiple triggers under the on keyword. A workflow can be triggered automatically on pull requests and also manually using workflow_dispatch.
+============================================================================================
+Q. workflow_dispatch trigger is use for what in GitHub Actions ?
+--> Instead of triggering automatically on:
+
+push
+
+pull_request
+
+schedule
+
+workflow_dispatch allows:
+
+👉 Manual trigger
+👉 Button click execution
+=========================================================================
+Where Do You See It?
+
+In GitHub:
+
+Go to Actions tab
+
+Select workflow
+
+Click "Run workflow"
+
+Provide inputs (if defined)
+=======================================
+Q. What Is a Reusable Workflow? 	
+--> A Reusable Workflow is a workflow file that can be called by another workflow.
+
+Reusable Workflow is an advanced GitHub Actions concept used heavily in enterprise CI/CD.
+Instead of duplicating pipeline logic in multiple files, you:
+
+Write the workflow once
+
+Call it from different workflows
+
+Pass different inputs
+
+👉 Like a function in programming
+======================================================
+uses: repo/.github/workflows/deploy.yml@main 
+Q. why we use above ?
+
+Using a tag (Recommended in production) -->
+uses: org/repo/.github/workflows/deploy.yml@v1.2.0
+--> It means:
+
+Call (reuse) a workflow file from a repository and execute it.
+
+Instead of writing deployment logic again, we reuse an existing workflow.
+===============================================================================
+Reusable workflow (deploy.yml) & Caller workflow:
+===================================================================
+🔥 Where Is with: Used?
+with: is used in two cases:
+✅ Case 1: When Using an Action
+- uses: actions/setup-node@v3
+  with:
+    node-version: 18
+=================================================================
+✅ Case 2: When Calling Reusable Workflow
+jobs:
+  deploy:
+    uses: org/repo/.github/workflows/deploy.yml@main
+    with:
+      ENV: DEV
+===================================================================
+🔄 Real Enterprise Flow
+Step 1: Manual trigger
+on:
+  workflow_dispatch:
+    inputs:
+      ENV:
+        required: true
+==================================
+Step 2: Call reusable workflow
+jobs:
+  deploy:
+    uses: company/repo/.github/workflows/deploy.yml@main
+    with:
+      ENV: ${{ github.event.inputs.ENV }}
+==========================================
+👉 Here:
+
+workflow_dispatch collects input
+
+with: passes input to reusable workflow
+
+🔥 This is exactly what your screenshot pipeline is doing.
+==================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
